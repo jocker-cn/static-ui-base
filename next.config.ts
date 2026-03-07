@@ -5,8 +5,7 @@ import fs from 'fs';
 const activeProfile = process.env.PROFILE;
 
 // 默认指向一个空配置
-let profilePath = path.resolve(__dirname, 'config/empty.yml');
-
+let profilePath = path.resolve(__dirname, 'z_config/empty.yml');
 if (activeProfile) {
     const targetPath = path.resolve(__dirname, `z_config/application-${activeProfile}.yml`);
     if (fs.existsSync(targetPath)) {
@@ -14,7 +13,6 @@ if (activeProfile) {
         console.log(`✅ Webpack 绑定特定市场扩展配置: ${targetPath}`);
     }
 }
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     output: 'export',

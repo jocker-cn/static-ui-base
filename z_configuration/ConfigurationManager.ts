@@ -1,37 +1,54 @@
-// src/config/ConfigurationManager.ts
-import {validateSync} from 'class-validator';
-import merge from 'lodash/merge';
+// src/z_configuration/ConfigurationManager.ts
+import { AppConfiguration, IAppConfiguration } from './AppConfiguration';
+import { IConfigLoader, DevConfigLoader, SwitcherConfigLoader, BuildConfigLoader } from './ConfigLoaders';
 
-// 动态注入的 YAML
-import baseConfig from '@base-config';
-import profileConfig from '@profile-config';
+const isProd = process.env.NEXT_PUBLIC_ENV === 'production';
+// 假设你通过环境变量 NEXT_PUBLIC_ENABLE_SWITCHER=true 来专门开启切换台
+const isSwitcherEnabled = process.env.NEXT_PUBLIC_ENABLE_SWITCHER === 'true';
 
-import {AppConfiguration, IAppConfiguration} from './AppConfiguration';
+// 1. 简单工厂：根据环境初始化具体的策略 Loader
+let loader: IConfigLoader;
+if (isProd) {
+    loader = new BuildConfigLoader();
+} else if (isSwitcherEnabled) {
+    loader = new SwitcherConfigLoader();
+} else {
+    loader = new DevConfigLoader();
+}
+
+// 2. 初始化核心单例
+let configInstance = new AppConfiguration(loader.load());
+const listeners: Array<() => void> = [];
 
 export class ConfigurationManager {
-    private static instance: AppConfiguration;
-
-    public static init() {
-        if (process.env.NODE_ENV === 'development' || !this.instance) {
-            // 1. 深度合并
-            const finalMergedConfig = merge({}, baseConfig, profileConfig || {});
-
-            // 2. 实例化并装载数据
-            const localConfig = new AppConfiguration(finalMergedConfig);
-
-            // 3. 执行 class-validator 校验
-            const errors = validateSync(localConfig);
-            if (errors.length > 0) {
-                console.error("❌ UI 配置校验失败:", errors);
-            }
-
-            this.instance = localConfig;
-        }
-    }
-
-    // 全局暴露的单例获取方法
     public static get(): IAppConfiguration {
-        if (!this.instance) this.init();
-        return this.instance;
+        return configInstance;
     }
+
+    public static getLoader(): IConfigLoader {
+        return loader;
+    }
+
+    // 重载配置并触发 UI 刷新
+    public static reload() {
+        configInstance = new AppConfiguration(loader.load());
+        listeners.forEach(l => l());
+    }
+
+    public static subscribe(listener: () => void) {
+        listeners.push(listener);
+        return () => {
+            const index = listeners.indexOf(listener);
+            if (index > -1) listeners.splice(index, 1);
+        };
+    }
+}
+
+// 🔥 HMR 钩子：当任意 YAML 文件变动时，通知 Manager 重新 load()
+// @ts-ignore
+if (process.env.NODE_ENV === 'development' && module.hot) {
+    // @ts-ignore
+    module.hot.accept(loader.load.id, () => { // 泛指配置目录
+        ConfigurationManager.reload();
+    });
 }
