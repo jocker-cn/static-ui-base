@@ -1,0 +1,12 @@
+# config/application-market-a.yml
+ui:
+  sidebar:
+    logoTitle: "🌟 A市場專屬中樞"
+    items:
+      - key: "dashboard"
+        title: "📊 儀表盤"
+        path: "/dashboard"
+      - key: "settings"
+        title: "⚙️ 系統設置"
+        path: "/settings"
+      # 直接不寫 forms，打包 A 市場時它就自動消失了！
