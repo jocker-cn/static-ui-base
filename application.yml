@@ -3,14 +3,14 @@ app:
   version: 0.0.1
 
 # application.yml
-apiBaseUrl: "https://api.default.com"
+apiBaseUrl: ${NEXT_PUBLIC_API_URL}
 
 ui:
   sidebar:
     # 側邊欄頂部標題
     logoTitle: "🚀 UI 配置中枢"
     # 是否預設展開
-    defaultOpen: true
+    default-open: true
     # 選單項目清單 (Array)
     items:
       - key: "dashboard"

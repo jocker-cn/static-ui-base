@@ -26,7 +26,8 @@ const nextConfig = {
                 path.resolve(__dirname, 'application.yml'), // 允许根目录的基础配置
                 path.resolve(__dirname, 'z_config')           // 允许 config 目录下的扩展配置
             ],
-            use: 'yaml-loader',
+            use: ['yaml-loader', path.resolve(__dirname, 'z_configuration/yaml-env-loader.js')],
+
         });
 
         // 动态别名映射

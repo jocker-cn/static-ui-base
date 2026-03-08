@@ -1,5 +1,6 @@
 // src/config/AppConfiguration.ts
-import {IsString, IsUrl} from 'class-validator';
+import {AppConfig, DebugConfig, SidebarItemConfig, UiConfig} from "@/z_configuration/YamlConfigModel";
+import merge from "lodash/merge";
 
 // ==========================================
 // 1. 数据结构定义 (Types)
@@ -27,56 +28,67 @@ export interface IAppConfiguration {
     isSidebarDefaultOpen(): boolean;
 
     getSidebarItems(): SidebarItem[];
-    isEnvSwitcherEnabled(): boolean; // 新增：是否开启环境切换器
+
+    isEnvSwitcherEnabled(): boolean;
 }
 
 // ==========================================
 // 3. 具体实现类 (Implementation - 负责处理原始数据和校验)
 // ==========================================
-export class AppConfiguration implements IAppConfiguration {
-    // 我们只对最基础、最致命的字段进行运行期拦截
-    @IsUrl({}, {message: 'API Base URL 格式不正确'})
-    apiBaseUrl: string;
+export abstract class AbstractAppConfiguration implements IAppConfiguration {
 
-    // 内部保存原始的 UI 配置树
-    private uiConfig: any;
+    // --- 数据属性声明 (并赋予绝对安全的默认值) ---
+    public app: AppConfig = new AppConfig();
+    public apiBaseUrl: string = '';
+    public ui: UiConfig = new UiConfig();
+    public debug: DebugConfig = new DebugConfig();
 
-    private app: any;
-    private yamlData: any;
-    constructor(yamlData: any) {
-        // 容错处理：确保即使 YAML 漏写了，也不会导致 undefined 报错
-        this.apiBaseUrl = yamlData?.apiBaseUrl || '';
-        this.uiConfig = yamlData?.ui || {};
-        this.app = yamlData?.app || {};
-        this.yamlData = yamlData || {};
-    }
-
-    // --- 接口方法实现 ---
-    getAppName(): string {
-        return this?.app?.name || 'Unknown App';
-    }
-    isEnvSwitcherEnabled(): boolean {
-        // 从 YAML 的 debug 节点获取，默认为 false
-        return !!this.yamlData?.debug?.enableEnvSwitcher;
-    }
-    getAppVersion(): string {
-        return this?.app?.version || '1.0.0';
-    }
-
-    getApiBaseUrl(): string {
+    // --- 接口的默认实现 (直接操作自身的属性) ---
+    public getApiBaseUrl(): string {
         return this.apiBaseUrl;
     }
 
-    getSidebarLogoTitle(): string {
-        return this.uiConfig?.sidebar?.logoTitle || '默认系统名称';
+    public getSidebarLogoTitle(): string {
+        return this.ui.sidebar.logoTitle;
+    }
+
+    public getSidebarItems(): SidebarItemConfig[] {
+        return this.ui.sidebar.items;
+    }
+
+    public isEnvSwitcherEnabled(): boolean {
+        return this.debug.enableEnvSwitcher;
+    }
+
+
+    getAppName(): string {
+        return `${this.app.name} UAT`;
+    }
+
+    getAppVersion(): string {
+        return this.app.version;
     }
 
     isSidebarDefaultOpen(): boolean {
-        // 默认给 true
-        return this.uiConfig?.sidebar?.defaultOpen ?? true;
+        return this.ui.sidebar.defaultOpen;
     }
 
-    getSidebarItems(): SidebarItem[] {
-        return this.uiConfig?.sidebar?.items || [];
+}
+
+export class AppConfiguration extends AbstractAppConfiguration {
+
+    constructor(rawYamlData: any) {
+        super();
+
+        // ⚠️ Java/C# 架构师最爱的魔法：
+        // 直接将传入的 JSON 对象与当前实例 (this) 进行深度合并。
+        // 因为 super() 已经执行，this 上已经有了所有的默认值。
+        // 如果 rawYamlData 缺斤少两，合并后依然会有默认值兜底！
+        merge(this, rawYamlData);
     }
+
+    // 如果某个特殊环境需要覆盖默认逻辑，直接在这里 Override 即可！
+    // override getSidebarLogoTitle(): string {
+    //     return `[测试环境] ${super.getSidebarLogoTitle()}`;
+    // }
 }
