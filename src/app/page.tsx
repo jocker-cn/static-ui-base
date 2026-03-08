@@ -3,6 +3,7 @@
 
 import React from 'react';
 import {ConfigurationManager} from "@/z_configuration/ConfigurationManager";
+import {AbstractAppConfiguration} from "@/z_configuration/AppConfiguration";
 
 export default function BulletproofLayout() {
     // 依然是同步读取，享受单例带来的纯净逻辑
@@ -22,7 +23,6 @@ export default function BulletproofLayout() {
                 <div style={{padding: '24px', fontSize: '20px', fontWeight: 'bold', borderBottom: '1px solid #34495e'}}>
                     {config.getSidebarLogoTitle() + config.getAppName()}
                 </div>
-
                 <nav style={{flex: 1, padding: '16px 0'}}>
                     {sidebarItems.map(item => (
                         <div key={item.key}

@@ -28,4 +28,5 @@ export class DebugConfig {
 export class AppConfig {
     name: string = '';
     version: string = '';
+    deepFreeze: boolean = false;
 }

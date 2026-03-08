@@ -1,6 +1,7 @@
 import './globals.css';
 import ClientOnly from '@/src/components/ClientOnly';
 import FloatingConsole from '@/src/components/FloatingConsole';
+import DevControlCenter from "@/src/components/DevControlCenter";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
@@ -9,7 +10,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ClientOnly>
             {children}
         </ClientOnly>
-        <FloatingConsole />
+        {/*<FloatingConsole />*/}
+        <DevControlCenter />
         </body>
         </html>
     );

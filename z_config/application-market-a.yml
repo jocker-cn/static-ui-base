@@ -1,3 +1,10 @@
+# yaml-language-server: $schema=src/z_configuration/config.schema.json
+apiBaseUrl: http://127.0.0.1
+app:
+  name: '123'
+  version: '1'
+  deepFreeze: false
+
 ui:
   sidebar:
     logoTitle: "🌟 A市場專屬中樞"
@@ -9,3 +16,6 @@ ui:
         title: "⚙️ 系統設置"
         path: "/settings"
       # 直接不寫 forms，打包 A 市場時它就自動消失了！
+
+debug:
+  enableEnvSwitcher: false

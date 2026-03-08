@@ -41,8 +41,8 @@ export abstract class AbstractAppConfiguration implements IAppConfiguration {
     public app: AppConfig = new AppConfig();
     public apiBaseUrl: string = '';
     public ui: UiConfig = new UiConfig();
-    public debug: DebugConfig = new DebugConfig();
 
+    public debug: DebugConfig = new DebugConfig();
     // --- 接口的默认实现 (直接操作自身的属性) ---
     public getApiBaseUrl(): string {
         return this.apiBaseUrl;

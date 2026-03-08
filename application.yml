@@ -1,6 +1,10 @@
 app:
   name: ui-base
   version: 0.0.1
+  #  deep-freeze: ${NEXT_PUBLIC_DEEP_FREEZE:true}
+  deepFreeze: false
+debug:
+  enableEnvSwitcher: false
 
 # application.yml
 apiBaseUrl: ${NEXT_PUBLIC_API_URL}
@@ -10,7 +14,7 @@ ui:
     # 側邊欄頂部標題
     logoTitle: "🚀 UI 配置中枢"
     # 是否預設展開
-    default-open: true
+    defaultOpen: true
     # 選單項目清單 (Array)
     items:
       - key: "dashboard"

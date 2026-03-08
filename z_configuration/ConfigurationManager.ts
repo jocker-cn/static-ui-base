@@ -1,6 +1,7 @@
 // src/z_configuration/ConfigurationManager.ts
-import { AppConfiguration, IAppConfiguration } from './AppConfiguration';
-import { IConfigLoader, DevConfigLoader, SwitcherConfigLoader, BuildConfigLoader } from './ConfigLoaders';
+import {AppConfiguration, IAppConfiguration} from './AppConfiguration';
+import {IConfigLoader, DevConfigLoader, SwitcherConfigLoader, BuildConfigLoader} from './ConfigLoaders';
+import merge from "lodash/merge";
 
 const isProd = process.env.NEXT_PUBLIC_ENV === 'production';
 // 假设你通过环境变量 NEXT_PUBLIC_ENABLE_SWITCHER=true 来专门开启切换台
@@ -16,8 +17,27 @@ if (isProd) {
     loader = new DevConfigLoader();
 }
 
+
+function deepFreeze<T>(obj: T): T {
+    if (obj && typeof obj === 'object') {
+        Object.keys(obj).forEach(prop => {
+            const value = (obj as any)[prop];
+            if (value && typeof value === 'object') {
+                deepFreeze(value);
+            }
+        });
+        return Object.freeze(obj);
+    }
+    return obj;
+}
+
 // 2. 初始化核心单例
 let configInstance = new AppConfiguration(loader.load());
+
+if (configInstance.app.deepFreeze) {
+    configInstance = deepFreeze(configInstance);
+}
+
 const listeners: Array<() => void> = [];
 
 export class ConfigurationManager {
@@ -41,6 +61,16 @@ export class ConfigurationManager {
             const index = listeners.indexOf(listener);
             if (index > -1) listeners.splice(index, 1);
         };
+    }
+
+    public static override(partialConfig: any) {
+        if (process.env.NODE_ENV !== 'development') return; // 生产环境防呆保护
+
+        // 1. 将新的局部值深度合并到当前单例中
+        merge(configInstance, partialConfig);
+
+        // 2. 触发我们在 ClientOnly 中注册的 renderTick 监听器！
+        listeners.forEach(l => l());
     }
 }
 
