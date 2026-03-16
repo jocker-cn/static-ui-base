@@ -7,7 +7,7 @@ import {AbstractAppConfiguration} from "@/z_configuration/AppConfiguration";
 
 export default function BulletproofLayout() {
     // 依然是同步读取，享受单例带来的纯净逻辑
-    const config = ConfigurationManager.get();
+    const config = ConfigurationManager.getRawData();
     const sidebarItems = config.getSidebarItems();
 
     return (
