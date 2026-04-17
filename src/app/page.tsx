@@ -3,7 +3,7 @@
 
 import React from 'react';
 import {ConfigurationManager} from "@/z_configuration/ConfigurationManager";
-import AIFundTable from "@/src/components/AIFundTable";
+import {AIFundTable} from "@/src/components/AIFundTable";
 import {SidebarConfig} from "@/z_configuration/YamlConfigModel";
 
 export default function BulletproofLayout() {
