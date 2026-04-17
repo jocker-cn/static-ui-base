@@ -13,7 +13,7 @@ export default function DevControlCenter() {
 
     if (process.env.NODE_ENV !== 'development' || !isMounted) return null;
 
-    const config = ConfigurationManager.get();
+    const config = ConfigurationManager.getRawData();
 
     // 核心修改方法：构建深层对象并通知 Manager
     // 例如：path = ['ui', 'sidebar', 'logoTitle'], value = '新标题'

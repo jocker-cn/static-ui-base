@@ -1,0 +1,12 @@
+// src/types/i18next.d.ts
+import 'i18next';
+import en from '../i18n/locales/en.json';
+
+declare module 'i18next' {
+    interface CustomTypeOptions {
+        defaultNS: 'translation';
+        resources: {
+            translation: typeof en; // 强制以en JSON 结构为强类型基准
+        };
+    }
+}

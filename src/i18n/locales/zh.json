@@ -1,0 +1,20 @@
+{
+  "app": {
+    "common": {
+      "loading": "加载中...",
+      "confirm": "确定",
+      "cancel": "取消",
+      "switchLang": "Switch to English"
+    },
+    "chat": {
+      "table": {
+        "fund_code": "基金代码",
+        "fund_name": "基金名称",
+        "fund_type": "基金类型"
+      },
+      "input": {
+        "placeholder": "请输入你想了解的基金..."
+      }
+    }
+  }
+}

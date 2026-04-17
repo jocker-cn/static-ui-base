@@ -1,0 +1,20 @@
+{
+  "app": {
+    "common": {
+      "loading": "Loading...",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "switchLang": "切换至中文"
+    },
+    "chat": {
+      "table": {
+        "fund_code": "Fund Code",
+        "fund_name": "Fund Name",
+        "fund_type": "Fund Type"
+      },
+      "input": {
+        "placeholder": "Ask about any fund..."
+      }
+    }
+  }
+}
