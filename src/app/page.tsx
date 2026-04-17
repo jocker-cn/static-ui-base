@@ -3,7 +3,7 @@
 
 import React from 'react';
 import {ConfigurationManager} from "@/z_configuration/ConfigurationManager";
-import {AIFundTable} from "@/src/components/AIFundTable";
+import {AIFundTable, AIFundTableDemo} from "@/src/components/AIFundTable";
 import {SidebarConfig} from "@/z_configuration/YamlConfigModel";
 
 export default function BulletproofLayout() {
@@ -56,7 +56,7 @@ export default function BulletproofLayout() {
                     <p style={{color: '#7f8c8d'}}>当前配置模式：<span
                         style={{color: '#3498db', fontWeight: 'bold'}}>{process.env.NEXT_PUBLIC_ENV}</span></p>
                 </header>
-                <AIFundTable/>
+                <AIFundTableDemo/>
                 <section style={{
                     backgroundColor: '#fff',
                     padding: '24px',
